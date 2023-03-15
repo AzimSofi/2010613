@@ -8,10 +8,10 @@ def average(total, size):
 print("How many numbers would you like: ")
 inputSize = int(input())
 
-cumulative = 0
+cumulative = float()
 for i in range(0, inputSize):
     print("User input: ")
     usersInput = float(input())
-    cumulative = usersInput + cumulative
+    cumulative += usersInput
 
 print("Your input average is ", average(cumulative, inputSize))
