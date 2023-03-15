@@ -1,3 +1,3 @@
 # Group number#
-IIUM Student ECIE 3101 Section 1
-testtttt gayy
+IIUM Student ECIE 3101 Section 2
+
