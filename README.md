@@ -1,5 +1,5 @@
 # Group number#
-IIUM ECIE 3101 Section 2
+IIUM ECIE 3101 Section 1 and 2
 
 ## Group members
 - 2010613
