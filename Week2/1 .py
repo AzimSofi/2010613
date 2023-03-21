@@ -4,14 +4,23 @@
 def average(total, size):
     return total/size
 
-
-print("How many numbers would you like: ")
-inputSize = int(input())
-
+while True:
+    try:
+        input_size = int(input("How many numbers would you like: "))
+        break
+    except ValueError:
+        print("Invalide input. Please enter a number:")
+        
 cumulative = float()
-for i in range(0, inputSize):
-    print("User input: ")
-    usersInput = float(input())
-    cumulative += usersInput
+for i in range(0, input_size):
+    
+    while True:
+        try:
+            users_input = float(input("User input: "))
+            break
+        except ValueError:
+            print("Invalide input. Please enter a number:")
+    cumulative += users_input
 
-print("Your input average is ", average(cumulative, inputSize))
+print("Your input total is ", cumulative)
+print("Your input average is ", average(cumulative, input_size))
