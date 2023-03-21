@@ -4,7 +4,7 @@
 
 def LCM(num1, num2):
     # Check for zero input
-    if num1 == 0  or num 2 == 0:
+    if num1 == 0  or num2 == 0:
         return 0
     
     # To keep track of each multiplicative
