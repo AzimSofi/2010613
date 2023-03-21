@@ -3,6 +3,10 @@
 # of both numbers.
 
 def LCM(num1, num2):
+    # Check for zero input
+    if num1 == 0  or num 2 == 0:
+        return 0
+    
     # To keep track of each multiplicative
     oldnum1 = num1
     oldnum2 = num2
@@ -24,10 +28,10 @@ def GCD(num1, num2):
 
 print("Input 2 numbers to find the GCD (Greatest Common Divisor) and LCM (Lowest Common Multiple) of the two number.")
 print("First input")
-inputOne = int(input())
+input_one = int(input())
 
 print("Second input")
-inputTwo = int(input())
+input_two = int(input())
 
-print("GCD: ", GCD(inputOne, inputTwo))
-print("LCM: ", LCM(inputOne, inputTwo))
+print("GCD: ", GCD(input_one, input_two))
+print("LCM: ", LCM(input_one, input_two))
