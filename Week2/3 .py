@@ -26,12 +26,14 @@ def GCD(num1, num2):
     return int(num1*num2/LCM(num1, num2))
 
 
-print("Input 2 numbers to find the GCD (Greatest Common Divisor) and LCM (Lowest Common Multiple) of the two number.")
-print("First input")
-input_one = int(input())
-
-print("Second input")
-input_two = int(input())
+print("Input 2 numbers to find the GCD (Greatest Common Divisor) and LCM (Lowest Common Multiple) of the two numbers.")
+while True:
+    try:
+        input_one = int(input("First input: "))
+        input_two = int(input("Second input: "))
+        break
+    except ValueError:
+        print("Invalid input. Please enter an integer.")
 
 print("GCD: ", GCD(input_one, input_two))
 print("LCM: ", LCM(input_one, input_two))
