@@ -2,14 +2,19 @@
 # and output the total and the average of the numbers.
 
 def average(total, size):
+    if size == 0:
+        return 0
     return total/size
 
 while True:
     try:
         input_size = int(input("How many numbers would you like: "))
-        break
+        if input_size < 0:
+            print("Invalide input. Please enter a positive integer:")
+        else:
+            break
     except ValueError:
-        print("Invalide input. Please enter a number:")
+        print("Invalide input. Please enter an integer:")
         
 cumulative = float()
 for i in range(0, input_size):
