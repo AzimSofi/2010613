@@ -1,4 +1,4 @@
-# 3. Create a program that asks the user to provide 2 numbers 
+# 1c. Create a program that asks the user to provide 2 numbers 
 # and output the GCD (Greatest Common Divisor) and LCM (Lowest Common Multiple) 
 # of both numbers.
 
