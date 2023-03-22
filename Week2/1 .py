@@ -10,11 +10,11 @@ while True:
     try:
         input_size = int(input("How many numbers would you like: "))
         if input_size < 0:
-            print("Invalide input. Please enter a positive integer:")
+            print("Invalid input. Please enter a positive integer:")
         else:
             break
     except ValueError:
-        print("Invalide input. Please enter an integer:")
+        print("Invalid input. Please enter an integer:")
         
 cumulative = float()
 for i in range(0, input_size):
@@ -24,7 +24,7 @@ for i in range(0, input_size):
             users_input = float(input("User input: "))
             break
         except ValueError:
-            print("Invalide input. Please enter a number:")
+            print("Invalid input. Please enter a number:")
     cumulative += users_input
 
 print("Your input total is ", cumulative)
