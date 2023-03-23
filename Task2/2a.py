@@ -3,7 +3,7 @@ Create 2 functions countOdd() and countEven() that counts the even
 and odd numbers in the list. (3m)
 '''
 
-# region NODE CLASS
+# region NODE CLASS <fold this class>
 class Node:
     #CONSTUCTOR
     def __init__(self, data=None, link=None):
@@ -28,7 +28,7 @@ class Node:
         return self.link
 # endregion
 
-# region LINKED LIST CLASS
+# region LINKED LIST CLASS <fold this class>
 class LL:
     #LL CONSTRUCTOR
     def __init__(self):
@@ -307,44 +307,86 @@ class LL:
             print("The index desired in not within the size of the list")
 # endregion
 
+# LL Class with addition countOdd() and countEven() method
 class LL_forTask(LL):
     def __init__(self):
         super().__init__() # Inherits LL's constructor
 
+    # Negative number can also be even or odd
+    # 0 is an even number
     def countOdd(self):
-        current = self.head
+        current = self.head # Get pointer of head
         if current is None:
             return 0
         else:
             odd_count = 0
             while current:
-                if current.getData() % 2 != 0: # If the remainder of the division not zero => odd
+                # IMPORTANT to check instance first before checking % 2 != 0
+                # isinstance() built in function to check which class it belongs to
+                # If the remainder of the division not zero => odd
+
+                if isinstance(current.getData(), int) and current.getData() % 2 != 0: 
                     odd_count += 1
-                current = current.getNext()
+                current = current.getNext() # Points to next node
             del current
             return odd_count
     
     def countEven(self):
-        current = self.head
+        current = self.head # Get pointer of head
         if current is None:
             return 0
         else:
             even_count = 0
             while current:
-                if current.getData() % 2 == 0: # If the remainder of the division not zero => odd
+                if isinstance(current.getData(), int) and current.getData() % 2 == 0: # If the remainder of the division not zero => odd
                     even_count += 1
-                current = current.getNext()
+                current = current.getNext() # Points to next node
             del current
             return even_count
 
-# test
+# region test
 '''
+a = LL_forTask()
+a.push(5)
+print("Even:", a.countEven())
+print("Odd:", a.countOdd())
+
+a = LL_forTask()
+a.push("hello")
+print("Even:", a.countEven())
+print("Odd:", a.countOdd())
+
+a = LL_forTask()
+print("Even:", a.countEven())
+print("Odd:", a.countOdd())
+
+
 a = LL_forTask()
 a.push(1)
 a.push(2)
 a.push(3)
+a.push(2)
 a.push(4)
+a.push(3)
+print("Even:", a.countEven())
+print("Odd:", a.countOdd())
+
+a = LL_forTask()
+a.push(1)
+a.push("hello")
+a.push(3)
+a.push("world")
 a.push(5)
 print("Even:", a.countEven())
 print("Odd:", a.countOdd())
+
+a = LL_forTask()
+a.push(-5)
+a.push(-3)
+a.push(-1)
+a.push(0)
+a.push(2)
+print("Even:", a.countEven())
+print("Odd:", a.countOdd())
 '''
+# endregion
