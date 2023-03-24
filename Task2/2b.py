@@ -306,42 +306,117 @@ class LL:
             print("The index desired in not within the size of the list")
 # endregion
 
-# LL Class with addition countOdd() and countEven() method
+# LL Class with addition swap_elements_by_index() method
 class LL_forTask(LL):
     def __init__(self):
         super().__init__() # Inherits LL's constructor
 
-    def swap_elements_by_index(self, first_index, second_index): # first node in LL is index1 (headではない)
-        current = self.head
-        if current is None:
+    def swap_elements_by_index(self, first_index, second_index):
+        if self.head is None:
             print("List is empty")
+            return
+
+        if first_index == second_index: # 何これ? = No swap
+            return
+
+        # Initialize node, prev node and counters
+        current = self.head
+        node_before_node1 = None
+        node_before_node2 = None
+        node1 = None
+        node2 = None
+        index = 0 # Index of head is 0 です
+
+        # Traverse the linked list and find the nodes to swap
+        while current:
+            if index == first_index - 2: # Node that points to node1
+                node_before_node1 = current
+            elif index == first_index -1: # Node 1
+                node1 = current
+
+            if index == second_index - 2: # Node that points to node2
+                node_before_node2 = current
+            elif index == second_index -1: # Node2
+                node2 = current
+
+            if node1 and node2:
+                break
+
+            current = current.getNext()
+            index += 1
+
+        # Check if the nodes are valid (debug) eg. Index is out of bound
+        if not (node1 and node2):
+            return
+
+        # Update the Node that points to node1/2's pointers to 2/1
+        if node_before_node1:
+            node_before_node1.setLink(node2)
         else:
-            index = 0
-            while current:
-                if first_index == 0 or index == first_index -1: # Is head or immediate note before first_index node
-                    temp_node1 = current # Set to head
+            self.head = node2
 
-                elif index == second_index -1:
-                    temp_node2 = current
-                
-                elif index == second_index:
-                    current = 
+        if node_before_node2:
+            node_before_node2.setLink(node1)
+        else:
+            self.head = node1
 
-                current = current.getNext()
-                index += 1
-            
-            #swap
-            print("The data is not found in the list.")
+        # Update the next node pointers
+        # Pointer of node 1 = pointer of node 2 //At the same time
+        # Pointer of node 2 = pointer of ndoe 1 //At the same time
+        temp = node1.getNext()
+        node1.setLink(node2.getNext())
+        node2.setLink(temp)
 
-
-# test
+# region test
 '''
 a = LL_forTask()
-a.push(1)
-a.push(2)
-a.push(3)
-a.push(4)
-a.push(5)
-print("Even:", a.countEven())
-print("Odd:", a.countOdd())
+a.addToEnd(1)
+a.addToEnd(2)
+a.addToEnd(3)
+a.addToEnd(4)
+a.addToEnd(5)
+a.displayList()
+a.swap_elements_by_index(1,8)
+a.displayList()
+print(" ")
+
+str_list = LL_forTask()
+str_list.addToEnd("apple")
+str_list.addToEnd("banana")
+str_list.addToEnd("cherry")
+str_list.addToEnd("date")
+str_list.displayList()
+str_list.swap_elements_by_index(1,3)
+str_list.displayList()
+print(" ")
+
+mixed_list = LL_forTask()
+mixed_list.addToEnd(1)
+mixed_list.addToEnd("apple")
+mixed_list.addToEnd(True)
+mixed_list.addToEnd(3.14)
+mixed_list.addToEnd(False)
+mixed_list.displayList()
+mixed_list.swap_elements_by_index(1,3)
+mixed_list.displayList()
+print(" ")
+
+empty_list = LL_forTask()
+empty_list.displayList()
+empty_list.swap_elements_by_index(1,3)
+empty_list.displayList()
+print(" ")
+
+duplicate_list = LL_forTask()
+duplicate_list.addToEnd(1)
+duplicate_list.addToEnd(2)
+duplicate_list.addToEnd(3)
+duplicate_list.addToEnd(2)
+duplicate_list.addToEnd(5)
+duplicate_list.displayList()
+duplicate_list.swap_elements_by_index(1,3)
+duplicate_list.displayList()
+print(" ")
 '''
+
+# endregion
