@@ -37,11 +37,14 @@ class LL:
         self.head = tempNode.getNext()
         return tempNode.getData()
     
-    #ENQUEUE DATA INTO LIST
+    #ENQUEUE DATA INTO LIST (to tail)
     def enqueue(self,data):
         current = self.head
         if current is None:
-            self.addToStart(data)
+            tempNode = Node(data)
+            tempNode.setLink(self.head)
+            self.head = tempNode
+            del tempNode
         else:
             tempNode = Node(data)
             while current.getNext():
@@ -50,9 +53,9 @@ class LL:
             del tempNode
         del current
 
-    #DEQUEUE DATA FROM THE LIST
+    #DEQUEUE DATA FROM THE LIST (at head)
     def dequeue(self):
-        self.pop()
+        return self.pop() # dequeuing returns a value
 
     #DISPLAY THE LINKED LIST
     def displayList(self):
@@ -77,15 +80,21 @@ class LL:
             current = current.getNext()
         return count
 
+# Using stack data structure
 def convertToArray(linked_list):
     array = [] # create an empty array
     while linked_list.count() > 0:
         array.append(linked_list.pop()) # Take LL element and put inside array
     return array
 
-def reverseList(listA, listB):
+# Using queue data structure 
+# Head of LL is the start of the queue 
+def reverseList(nonempty_list, empty_list):
+    while nonempty_list.count() > 0:
+        tempNode = nonempty_list.dequeue()
+        empty_list.push(tempNode) # Using push instead of enqueue to insert it at the head
+        del tempNode
     return None
-
 
 
 # Test
@@ -119,4 +128,24 @@ listA.displayList()
 arrayA = convertToArray(listA)
 listA.displayList()
 print(arrayA)
+'''
+
+''' Passed
+listA = LL()
+listB = LL()
+listA.push('I')
+listA.enqueue('A')
+listA.enqueue('M')
+listA.push('A')
+listA.enqueue('M')
+listA.enqueue('U')
+listA.enqueue('S')
+listA.enqueue('L')
+listA.enqueue('I')
+listA.enqueue('M')
+listA.displayList()
+
+reverseList(listA,listB)
+listA.displayList()
+listB.displayList()
 '''
