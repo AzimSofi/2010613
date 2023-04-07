@@ -75,6 +75,17 @@ class HT(HashTable):
             print("Key is not a string")
             return
 
+    def delete(self,key):
+        index = 0
+        for i in self.keys:
+            if i == key:
+                self[i] = None # Deletes value
+                # self.keys[index] = None # Deletes key
+                return
+            index += 1
+        print("Key doesn't exist in the Hash table")        
+        return
+
 # Test
 hash = HT()
 hash['name'] = 'Zikri'
@@ -93,3 +104,15 @@ print(hash.values)
 
 hash['name'] = 'Hakim'
 print(hash['name'])
+
+hash.delete('age')
+print(hash.keys)
+print(hash.values)
+print(hash['age'])
+print(hash['birthdate'])
+
+# 
+hash.delete('忘れる')
+hash['age'] = 21
+print(hash.keys)
+print(hash.values)
