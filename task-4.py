@@ -76,13 +76,13 @@ class HT(HashTable):
             return
 
     def delete(self,key):
-        index = 0
+        # index = 0
         for i in self.keys:
             if i == key:
                 self[i] = None # Deletes value
                 # self.keys[index] = None # Deletes key
                 return
-            index += 1
+            # index += 1
         print("Key doesn't exist in the Hash table")        
         return
 
