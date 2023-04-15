@@ -22,20 +22,6 @@ def printPostorder(node):
         printPostorder(node.right)
         print("-->",node.val, end=" ")
 
-# BINARY SORT
-
-def insert(node,val):
-    if node is None:
-        return Node(val)
-    else:
-        if node.val is val:
-            return node
-        elif node.val < val:
-            node.right = insert(node.right, val)
-        else:
-            node.left = insert(node.left, val)
-    return node
-
 # Test
 root = Node(2)
 root.left = Node(3)
