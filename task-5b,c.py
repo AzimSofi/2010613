@@ -5,15 +5,31 @@ class Node:
         self.right = None
 
     def deepestBranch(self):
+        # initialize
+        path = f"{self.val}"
         depth = 0
-        while self.left:
-            depth += 1
-            return
-        while self.right:
-            depth += 1
-            return
 
+        if self.left is None and self.right is None:
+            print(f"Tree's max depth is 0\n{self.val}")
+        if self.left:
+            recur(self.left, path, depth)
+        if self.right:
+            recur(self.right, path, depth)
+
+        def recur(node, path, depth):
+            path += f" --> {node.val}"
+            depth += 1
+
+            if self.left:
+                recur(node.left, path, depth)
+            if self.right:
+                recur(node.right, path, depth)
+
+
+
+            return
         return
+
 
 def printPreorder(node):
     if node:
@@ -50,6 +66,7 @@ def insertSort(node,val):
 
 
 # Test
+
 root = Node('Haziman Sairin')
 insertSort(root,'Zikri Hakim')
 insertSort(root,'Jameel Majdi')
@@ -63,10 +80,10 @@ insertSort(root,'Zharif Aiman')
 insertSort(root,'Sharifa Harun')
 insertSort(root,'Najma Fuad')
 insertSort(root,'Amir Su\'ad')
-print("Preorder: ")
+'''print("Preorder: ")
 printPreorder(root)
 print("\nInorder: ")
 printInorder(root)
 print("\nPostorder: ")
-printPostorder(root)
-# root.deepestBranch()
+printPostorder(root)'''
+root.deepestBranch()
