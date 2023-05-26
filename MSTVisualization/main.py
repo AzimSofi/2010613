@@ -13,7 +13,7 @@ class Application(tk.Tk):
         self.graph = nx.Graph()
 
         self.edge_entries = [tk.Entry(self) for _ in range(3)]
-        tk.Label(self, text="Edges (u, v, w):").grid(column=0, row=0)
+        tk.Label(self, text="Edges (Node1, Node2, Weight):").grid(column=0, row=0)
         for i, entry in enumerate(self.edge_entries):
             entry.grid(column=i+1, row=0)
         tk.Button(self, text="Add Edge", command=self.add_edge).grid(column=4, row=0)
@@ -31,15 +31,19 @@ class Application(tk.Tk):
         self.plot_graph(self.graph)
 
     def calculate_mst(self, algorithm):
+        edges_copy = list(self.graph.edges(data=True))  # make a copy of the edges to restore later
         self.graph.clear()
-        edges_copy = self.edges.copy()  # make a copy of the edges to restore later
         if algorithm == "kruskal":
-            mst = tree.minimum_spanning_edges(self.graph, algorithm='kruskal', data=False)
+            self.graph.add_edges_from(edges_copy)
+            mst = tree.minimum_spanning_edges(self.graph, algorithm='kruskal', data=True)
         elif algorithm == "prim":
-            mst = tree.minimum_spanning_edges(self.graph, algorithm='prim', data=False)
-        mst_graph = nx.Graph(mst)
+            self.graph.add_edges_from(edges_copy)
+            mst = tree.minimum_spanning_edges(self.graph, algorithm='prim', data=True)
+        mst_graph = nx.Graph()
+        mst_graph.add_edges_from(mst)
         self.plot_graph(mst_graph)
-        self.graph.add_weighted_edges_from(edges_copy)  # restore the original edges
+        self.graph.clear()
+        self.graph.add_edges_from(edges_copy)  # restore the original edges
 
     def calculate_kruskal(self):
         self.calculate_mst("kruskal")
