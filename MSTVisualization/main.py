@@ -69,15 +69,22 @@ class Application(tk.Tk):
     def plot_graph(self, graph):
         self.figure.clear()
         pos = nx.spring_layout(graph)
-        nx.draw(graph, pos, with_labels=True,
-                 ax=self.figure.add_subplot(111))
-        labels = nx.get_edge_attributes(graph, 'weight')
-        nx.draw_networkx_edge_labels(graph, pos,
-                                    label_pos=0.5,
-                                    font_size = 10,
-                                    edge_labels=labels)
+
+        ax = self.figure.add_subplot(111)  # Add a subplot to the figure
+
+        # nodes
+        nx.draw_networkx_nodes(graph, pos, node_size=700, ax=ax)
+
+        # edges
+        nx.draw_networkx_edges(graph, pos, ax=ax)
+
+        # labels
+        edge_labels = nx.get_edge_attributes(graph, 'weight')
+        nx.draw_networkx_labels(graph, pos, font_size=20, ax=ax)
+        nx.draw_networkx_edge_labels(graph, pos, edge_labels=edge_labels, font_size=20, ax=ax)
+        
         self.canvas.draw()
-        print(labels)
+
 
 
 if __name__ == "__main__":
