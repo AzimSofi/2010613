@@ -29,9 +29,13 @@ class Application(tk.Tk):
         
         tk.Button(self, text="Generate a random Japanese route",
                     command=self.generate_random_graph_japanese).grid(column=1, row=1)
+        
+        tk.Button(self, text="Reset graph",
+                    command=self.clear_graph).grid(column=0, row=4)
         # 閉じるボタン
         tk.Button(self, text="Exit (閉じる)",
-                    command=self.quit).grid(column=2, row=4)
+                    command=self.quit).grid(column=1, row=4)
+
 
         self.figure = plt.Figure(figsize=(8, 8), dpi=100)  # Increased figsize
         self.canvas = FigureCanvasTkAgg(self.figure, master=self) 
@@ -48,9 +52,22 @@ class Application(tk.Tk):
     def generate_random_graph_japanese(self):
         self.random_graph('japan_city_names')    
 
+    def would_form_cycle(self, G, edge):
+        u, v = edge
+        if u in G.nodes and v in G.nodes:
+            if u in nx.node_connected_component(G, v):
+                return True
+        return False
+
+    def clear_graph(self):
+        self.graph.clear()
+        self.plot_graph(self.graph)
+
     # 作成済みグラフ
     def random_graph(self, things_to_random):
-
+        
+        MAX_NODE = 8
+        MIN_NODE = 4
         japan_city_names = [
         "Tokyo", "Yokohama", "Osaka", "Nagoya", "Sapporo", "Fukuoka", "Kobe", "Kyoto",
         "Kawasaki", "Saitama", "Hiroshima", "Sendai", "Kitakyushu", "Chiba", "Sakai",
@@ -67,7 +84,7 @@ class Application(tk.Tk):
         "Kawasaki", "Ichihara", "Neyagawa", "Ageo", "Akita", "Oyama", "Kasukabe", "Takahashi"]
 
         self.graph.clear()  # clear the current graph
-        n_nodes = random.randint(2, 15)  # generate a random number of nodes between 2 and 15
+        n_nodes = random.randint(MIN_NODE, MAX_NODE)  # generate a random number of nodes between MIN_NODE and MAX_NODE
 
         if things_to_random == 'letter':
             # generate a list of unique random letters from a to o
@@ -105,7 +122,7 @@ class Application(tk.Tk):
     def calculate_mst(self, algorithm):
         edges_copy = list(self.graph.edges(data=True))  # make a copy of the edges to restore later
         self.graph.clear()
-        
+
         mst_graph = nx.Graph()
 
         if algorithm == "kruskal":
@@ -113,13 +130,12 @@ class Application(tk.Tk):
             edges = sorted(self.graph.edges(data=True), key=lambda edge: edge[2]["weight"])
             for edge in edges:
                 u, v, w = edge
-                # add the edge if it doesn't form a cycle
-                if not mst_graph.has_node(v) or (mst_graph.has_node(u) and u not in nx.node_connected_component(mst_graph, v)):
+                # only add the edge if it doesn't form a cycle
+                if not self.would_form_cycle(mst_graph, (u, v)):
                     mst_graph.add_edge(u, v, weight=w["weight"])  # also copy the weight attribute
                     self.plot_graph(mst_graph)
                     self.canvas.get_tk_widget().update()  # force the widget to update
                     time.sleep(0.5)  # pause for a moment to see the result
-
 
         elif algorithm == "prim":
             self.graph.add_edges_from(edges_copy)
