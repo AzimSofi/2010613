@@ -1,7 +1,7 @@
 import tkinter as tk
 import networkx as nx
 import matplotlib.pyplot as plt
-import time
+import time, random, string
 from networkx.algorithms import tree
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
@@ -9,7 +9,7 @@ class Application(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
         self.title("MST Algorithms")
-        self.geometry("800x600")
+        self.geometry("1280x720")
 
         self.graph = nx.Graph()
 
@@ -20,22 +20,72 @@ class Application(tk.Tk):
         tk.Button(self, text="Add Edge", command=self.add_edge).grid(column=4, row=0)
 
         tk.Button(self, text="Calculate Kruskal's MST",
-                   command=self.calculate_kruskal).grid(column=0, row=1)
+                   command=self.calculate_kruskal).grid(column=0, row=2)
         tk.Button(self, text="Calculate Prim's MST",
-                   command=self.calculate_prim).grid(column=1, row=1)
+                   command=self.calculate_prim).grid(column=1, row=2)
 
-        self.quit_button()
+        tk.Button(self, text="Generate a random graph",
+                   command=self.generate_random_graph_letter).grid(column=0, row=1)
+        
+        tk.Button(self, text="Generate a random Japanese route",
+                    command=self.generate_random_graph_japanese).grid(column=1, row=1)
+        # 閉じるボタン
+        tk.Button(self, text="Exit (閉じる)",
+                    command=self.quit).grid(column=2, row=4)
+
         self.figure = plt.Figure(figsize=(5, 5), dpi=100)
         self.canvas = FigureCanvasTkAgg(self.figure, master=self) 
-        self.canvas.get_tk_widget().grid(column=0, row=2,
+        self.canvas.get_tk_widget().grid(column=0, row=3,
                                         columnspan=5)
 
-    def quit_button(self):
-        # 閉じるボタン
-        quit_btn = tk.Button(self)
-        quit_btn['text'] = 'Exit (閉じる)'
-        quit_btn['command'] = self.quit
-        quit_btn.grid(column=2, row=3)    
+    def generate_random_graph_letter(self):
+        self.random_graph('letter')
+
+    def generate_random_graph_japanese(self):
+        self.random_graph('japan_city_names')    
+
+    # 作成済みグラフ
+    def random_graph(self, things_to_random):
+
+        japan_city_names = [
+        "Tokyo", "Yokohama", "Osaka", "Nagoya", "Sapporo", "Fukuoka", "Kobe", "Kyoto",
+        "Kawasaki", "Saitama", "Hiroshima", "Sendai", "Kitakyushu", "Chiba", "Sakai",
+        "Shizuoka", "Nerima", "Okayama", "Hamamatsu", "Nishinomiya", "Kurashiki", "Kumamoto",
+        "Hachioji", "Matsuyama", "Funabashi", "Kagoshima", "Niigata", "Higashihiroshima",
+        "Himeji", "Matsudo", "Nagano", "Toyohashi", "Toyota", "Saga", "Utsunomiya", "Oita",
+        "Matsue", "Kanazawa", "Kawaguchi", "Ichikawa", "Kurume", "Fukushima", "Asahikawa",
+        "Amagasaki", "Yokosuka", "Toyonaka", "Kochi", "Takatsuki", "Akita", "Koshigaya",
+        "Miyazaki", "Naha", "Kasugai", "Otsu", "Akashi", "Hirakata", "Fukuyama", "Yamagata",
+        "Morioka", "Maebashi", "Kawagoe", "Ichinomiya", "Yokkaichi", "Koshigoe", "Gifu",
+        "Nara", "Yamaguchi", "Shimonoseki", "Okazaki", "Kurashiki", "Iwaki", "Hiratsuka",
+        "Fujisawa", "Hachinohe", "Kure", "Urayasu", "Kakogawa", "Hakodate", "Kamakura",
+        "Ebetsu", "Chigasaki", "Sasebo", "Hoya", "Yao", "Kashihara", "Ibaraki", "Takasaki",
+        "Kawasaki", "Ichihara", "Neyagawa", "Ageo", "Akita", "Oyama", "Kasukabe", "Takahashi"]
+
+        self.graph.clear()  # clear the current graph
+        n_nodes = random.randint(2, 15)  # generate a random number of nodes between 2 and 15
+
+        if things_to_random == 'letter':
+            # generate a list of unique random letters from a to o
+            nodes = random.sample(string.ascii_uppercase[:15], n_nodes)
+        elif things_to_random == 'japan_city_names':
+            nodes = random.sample(japan_city_names, n_nodes)
+
+        for node in nodes:
+            self.graph.add_node(node)  # add the nodes to the graph
+
+        # ensure the graph is connected
+        for i in range(n_nodes-1):
+            self.graph.add_edge(nodes[i], nodes[i+1], weight=random.randint(1, 10))  # randomly assign weights between 1 and 10
+
+        # add some extra random edges to make the graph more interesting
+        extra_edges = random.randint(1, n_nodes)  # generate a random number of extra edges
+        for _ in range(extra_edges):
+            node1, node2 = random.sample(nodes, 2)  # select two random nodes
+            if node1 != node2:  # ensure we don't connect a node to itself
+                self.graph.add_edge(node1, node2, weight=random.randint(1, 10))  # add the edge with a random weight
+
+        self.plot_graph(self.graph)  # display the random graph
 
     def add_edge(self):
         u, v, w = [entry.get() for entry in self.edge_entries]
