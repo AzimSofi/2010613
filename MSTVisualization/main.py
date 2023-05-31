@@ -1,6 +1,7 @@
 import tkinter as tk
 import networkx as nx
 import matplotlib.pyplot as plt
+import time
 from networkx.algorithms import tree
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
@@ -44,19 +45,34 @@ class Application(tk.Tk):
     def calculate_mst(self, algorithm):
         edges_copy = list(self.graph.edges(data=True))  # make a copy of the edges to restore later
         self.graph.clear()
+        
+        mst_graph = nx.Graph()
+
         if algorithm == "kruskal":
             self.graph.add_edges_from(edges_copy)
-            mst = tree.minimum_spanning_edges(self.graph,
-                                               algorithm='kruskal',
-                                                data=True)
+            edges = sorted(self.graph.edges(data=True), key=lambda edge: edge[2]["weight"])
+            for edge in edges:
+                u, v, w = edge
+                # add the edge if it doesn't form a cycle
+                if not mst_graph.has_node(v) or (mst_graph.has_node(u) and u not in nx.node_connected_component(mst_graph, v)):
+                    mst_graph.add_edge(u, v, weight=w["weight"])  # also copy the weight attribute
+                    self.plot_graph(mst_graph)
+                    self.canvas.get_tk_widget().update()  # force the widget to update
+                    time.sleep(0.5)  # pause for a moment to see the result
+
+
         elif algorithm == "prim":
             self.graph.add_edges_from(edges_copy)
-            mst = tree.minimum_spanning_edges(self.graph,
-                                               algorithm='prim',
-                                                data=True)
-        mst_graph = nx.Graph()
-        mst_graph.add_edges_from(mst)
-        self.plot_graph(mst_graph)
+            start_node = list(self.graph.nodes())[0]  # select the first node to start
+            mst_graph.add_node(start_node)
+            while mst_graph.number_of_nodes() < self.graph.number_of_nodes():
+                crossing_edges = [(u, v, d) for u, v, d in self.graph.edges(data=True) if ((u in mst_graph.nodes() and v not in mst_graph.nodes()) or (v in mst_graph.nodes() and u not in mst_graph.nodes()))]
+                edge_to_add = min(crossing_edges, key=lambda edge: edge[2]["weight"])
+                mst_graph.add_edge(edge_to_add[0], edge_to_add[1], weight=edge_to_add[2]["weight"])
+                self.plot_graph(mst_graph)
+                self.canvas.get_tk_widget().update()  # force the widget to update
+                time.sleep(0.5)  # pause for a moment to see the result
+
         self.graph.clear()
         self.graph.add_edges_from(edges_copy)  # restore the original edges
 
