@@ -33,10 +33,14 @@ class Application(tk.Tk):
         tk.Button(self, text="Exit (閉じる)",
                     command=self.quit).grid(column=2, row=4)
 
-        self.figure = plt.Figure(figsize=(5, 5), dpi=100)
+        self.figure = plt.Figure(figsize=(8, 8), dpi=100)  # Increased figsize
         self.canvas = FigureCanvasTkAgg(self.figure, master=self) 
         self.canvas.get_tk_widget().grid(column=0, row=3,
-                                        columnspan=5)
+                                        columnspan=5, sticky="nsew")  # Use sticky="nsew" to allow expansion
+
+        # Configure grid layout
+        self.grid_rowconfigure(3, weight=1)  # Set higher weight to row 3
+        self.grid_columnconfigure(0, weight=1, minsize=200)  # Set higher weight and minsize to column 0
 
     def generate_random_graph_letter(self):
         self.random_graph('letter')
@@ -71,19 +75,25 @@ class Application(tk.Tk):
         elif things_to_random == 'japan_city_names':
             nodes = random.sample(japan_city_names, n_nodes)
 
-        for node in nodes:
-            self.graph.add_node(node)  # add the nodes to the graph
+        while True:
+            self.graph.clear()
+            for node in nodes:
+                self.graph.add_node(node)  # add the nodes to the graph
 
-        # ensure the graph is connected
-        for i in range(n_nodes-1):
-            self.graph.add_edge(nodes[i], nodes[i+1], weight=random.randint(1, 10))  # randomly assign weights between 1 and 10
+            # ensure the graph is connected
+            for i in range(n_nodes-1):
+                self.graph.add_edge(nodes[i], nodes[i+1], weight=random.randint(1, 10))  # randomly assign weights between 1 and 10
 
-        # add some extra random edges to make the graph more interesting
-        extra_edges = random.randint(1, n_nodes)  # generate a random number of extra edges
-        for _ in range(extra_edges):
-            node1, node2 = random.sample(nodes, 2)  # select two random nodes
-            if node1 != node2:  # ensure we don't connect a node to itself
-                self.graph.add_edge(node1, node2, weight=random.randint(1, 10))  # add the edge with a random weight
+            # add some extra random edges to make the graph more interesting
+            extra_edges = random.randint(1, n_nodes)  # generate a random number of extra edges
+            for _ in range(extra_edges):
+                node1, node2 = random.sample(nodes, 2)  # select two random nodes
+                if node1 != node2 and not self.graph.has_edge(node1, node2):  # ensure we don't connect a node to itself or duplicate edges
+                    self.graph.add_edge(node1, node2, weight=random.randint(1, 10))  # add the edge with a random weight
+            
+            # if the graph is fully connected, break the loop, else generate a new graph
+            if nx.is_connected(self.graph):
+                break
 
         self.plot_graph(self.graph)  # display the random graph
 
@@ -134,7 +144,7 @@ class Application(tk.Tk):
 
     def plot_graph(self, graph):
         self.figure.clear()
-        pos = nx.spring_layout(graph)
+        pos = nx.spring_layout(graph, weight="weight", scale=10)
 
         ax = self.figure.add_subplot(111)  # Add a subplot to the figure
 
@@ -151,8 +161,7 @@ class Application(tk.Tk):
         
         self.canvas.draw()
 
-
-
+# スクリプトが直接実行された場合にアプリケーションを実行します
 if __name__ == "__main__":
     app = Application()
     app.mainloop()
